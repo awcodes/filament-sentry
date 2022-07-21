@@ -2,12 +2,14 @@
 
 namespace FilamentSentry;
 
+use App\Models\User;
 use Livewire\Livewire;
 use Illuminate\View\View;
 use Filament\Facades\Filament;
+use FilamentSentry\Observers\UserObserver;
 use Filament\PluginServiceProvider;
-use FilamentSentry\Resources\UserResource;
 use Spatie\LaravelPackageTools\Package;
+use FilamentSentry\Resources\UserResource;
 
 class FilamentSentryServiceProvider extends PluginServiceProvider
 {
@@ -19,6 +21,16 @@ class FilamentSentryServiceProvider extends PluginServiceProvider
     {
         $package
             ->name('filament-sentry')
-            ->hasConfigFile(['filament-breezy']);
+            ->hasConfigFile(['filament-sentry', 'filament-breezy'])
+            ->hasCommands([
+                Commands\PublishResources::class,
+            ]);
+    }
+
+    public function boot()
+    {
+        parent::boot();
+
+        User::observe(UserObserver::class);
     }
 }
