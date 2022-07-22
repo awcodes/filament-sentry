@@ -47,6 +47,25 @@ class User extends Authenticatable
 }
 ```
 
+## Emailing new users with password reset link
+
+Filament Sentry has the ability to email new users with a password reset link so they can make their password more accessible to them. This really should only be needed if you have disabled registration for your app.
+
+This functionality can be turned on and off in the config file. Use the 'noreply' setting to set the email address that will be used as the sender of the email sent to new users.
+
+```php
+    'noreply' => 'example@example.com',
+    'email_new_users' => true
+```
+
+## Unguarding Super Admin
+
+Filament Sentry unguards users with the super_admin role allowing them to bypass policies and have full control over the system. If you do not want super_admins to have this priviledge you can disable it in the config.
+
+```php
+    'unguard_super_admin' => false,
+```
+
 ## Seeder Reference (Optional)
 
 In `database/seeders/DatabaseSeeder.php` or where appropriate:
@@ -56,8 +75,10 @@ In `database/seeders/DatabaseSeeder.php` or where appropriate:
 $this->call(ShieldSettingSeeder::class);
 Artisan::call('shield:generate');
 
-\App\Models\User::factory()->create([
-    'name' => 'Tony Stark',
-    'email' => 'i.am@ironman.com',
-])->assignRole('super_admin');
+\App\Models\User::withoutEvents(function() {
+    \App\Models\User::factory()->create([
+        'name' => 'Tony Stark',
+        'email' => 'i.am@ironman.com',
+    ])->assignRole('super_admin');
+});
 ```

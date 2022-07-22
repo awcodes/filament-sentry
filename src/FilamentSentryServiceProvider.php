@@ -6,9 +6,10 @@ use App\Models\User;
 use Livewire\Livewire;
 use Illuminate\View\View;
 use Filament\Facades\Filament;
-use FilamentSentry\Observers\UserObserver;
 use Filament\PluginServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Spatie\LaravelPackageTools\Package;
+use FilamentSentry\Observers\UserObserver;
 use FilamentSentry\Resources\UserResource;
 
 class FilamentSentryServiceProvider extends PluginServiceProvider
@@ -22,15 +23,21 @@ class FilamentSentryServiceProvider extends PluginServiceProvider
         $package
             ->name('filament-sentry')
             ->hasConfigFile(['filament-sentry', 'filament-breezy'])
-            ->hasCommands([
-                Commands\PublishResources::class,
-            ]);
+            ->hasViews();
     }
 
     public function boot()
     {
         parent::boot();
 
-        User::observe(UserObserver::class);
+        if (config('filament-sentry.email_new_users')) {
+            User::observe(UserObserver::class);
+        }
+
+        if (config('filament-sentry.unguard_super_admin')) {
+            Gate::before(function ($user, $ability) {
+                return $user->hasRole('super_admin') ? true : null;
+            });
+        }
     }
 }
