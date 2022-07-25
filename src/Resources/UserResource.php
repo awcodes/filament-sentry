@@ -140,22 +140,4 @@ class UserResource extends Resource
     {
         return static::$model::count();
     }
-
-    public static function getResourceEntitiesSchema(): ?array
-    {
-        return collect(FilamentShield::getResources())->sortKeys()->reduce(function ($entities, $entity) {
-            $entities[] = Forms\Components\Card::make()
-                    ->extraAttributes(['class' => 'border-0 shadow-lg p-2'])
-                    ->schema([
-                        Forms\Components\Fieldset::make('Permissions')
-                            ->label(FilamentShield::getLocalizedResourceLabel($entity))
-                            ->extraAttributes(['class' => 'text-primary-600','style' => 'border-color:var(--primary)'])
-                            ->columns(2)
-                            ->schema(RoleResource::getResourceEntityPermissionsSchema($entity)),
-                    ])
-                    ->columnSpan(1);
-
-            return $entities;
-        }, []);
-    }
 }
