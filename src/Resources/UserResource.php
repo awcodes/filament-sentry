@@ -47,6 +47,7 @@ class UserResource extends Resource
                         Forms\Components\Toggle::make('reset_password')
                             ->columnSpan('full')
                             ->reactive()
+                            ->dehydrated(false)
                             ->hidden(function ($livewire) {
                                 if ($livewire instanceof CreateUser) {
                                     return true;
