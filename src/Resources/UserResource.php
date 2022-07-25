@@ -85,15 +85,13 @@ class UserResource extends Resource
                     ->collapsible()
                     ->collapsed()
                     ->schema([
-                        Forms\Components\Grid::make([
-                            'sm' => 2,
-                            'lg' => 3,
-                        ])
-                        ->schema(static::getResourceEntitiesSchema())
-                        ->columns([
-                            'sm' => 2,
-                            'lg' => 3,
-                        ]),
+                        Forms\Components\CheckboxList::make('permissions')
+                            ->columnSpan('full')
+                            ->relationship('permissions', 'name')
+                            ->getOptionLabelFromRecordUsing(function ($record) {
+                                return Str::of($record->name)->headline();
+                            })
+                            ->columns(4),
                     ])
             ]);
     }
