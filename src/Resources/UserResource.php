@@ -19,6 +19,7 @@ use BezhanSalleh\FilamentShield\Resources\RoleResource;
 use FilamentSentry\Resources\UserResource\Pages\EditUser;
 use FilamentSentry\Resources\UserResource\Pages\ListUsers;
 use FilamentSentry\Resources\UserResource\Pages\CreateUser;
+use Spatie\Permission\Models\Permission;
 
 class UserResource extends Resource
 {
@@ -89,9 +90,9 @@ class UserResource extends Resource
                             ->columnSpan('full')
                             ->relationship('permissions', 'name')
                             ->getOptionLabelFromRecordUsing(function ($record) {
-                                return Str::of($record->name)->headline();
+                                return Str::of($record->name)->replace('::', ' ')->headline();
                             })
-                            ->columns(4),
+                            ->columns(['md' => 2, 'lg' => 3]),
                     ])
             ]);
     }
@@ -139,5 +140,15 @@ class UserResource extends Resource
     protected static function getNavigationBadge(): ?string
     {
         return static::$model::count();
+    }
+
+    public static function getPermissions()
+    {
+        $permissions = Permission::get();
+        $groups = [];
+
+        $permissions->map(function($p) {
+            $name = explode(' ', $p->name);
+        });
     }
 }
