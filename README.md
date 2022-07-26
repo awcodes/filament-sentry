@@ -22,26 +22,18 @@ php artisan vendor:publish --tag=filament-sentry-config
 Install Shield
 
 ```bash
-php artisan vendor:publish --tag=filament-shield-migrations
-php artisan vendor:publish --tag=filament-shield-seeder
+php artisan shield:install --fresh --setting
 ```
 
-Open the `Database\Seeders\ShieldSettingSeeder.php` file and update the $settingKeys as needed.
-
-```bash
-php artisan migrate
-php artisan db:seed --class=ShieldSettingSeeder
-```
-
-Add the Spatie\Permission\Traits\HasRoles trait to your User model(s):
+Add the `Spatie\Permission\Traits\HasRoles` or `BezhanSalleh\FilamentShield\Traits\HasFilamentShield` trait to your User model(s):
 
 ```php
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
+use BezhanSalleh\FilamentShield\Traits\HasFilamentShield;
 
 class User extends Authenticatable
 {
-    use HasRoles;
+    use HasFilamentShield; // or HasRoles
 
     // ...
 }
@@ -70,8 +62,11 @@ Filament Sentry unguards users with the super_admin role allowing them to bypass
 
 In `database/seeders/DatabaseSeeder.php` or where appropriate:
 
-```php
+```bash
+php artisan vendor:publish --tag=filament-shield-seeder
+```
 
+```php
 $this->call(ShieldSettingSeeder::class);
 Artisan::call('shield:generate');
 
