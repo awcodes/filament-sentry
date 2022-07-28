@@ -39,5 +39,9 @@ class FilamentSentryServiceProvider extends PluginServiceProvider
                 return $user->hasRole('super_admin') ? true : null;
             });
         }
+
+        Filament::registerResources([
+            config('filament-sentry.user_resource')
+        ]);
     }
 }
