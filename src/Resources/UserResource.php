@@ -49,19 +49,10 @@ class UserResource extends Resource
                             ->columnSpan('full')
                             ->reactive()
                             ->dehydrated(false)
-                            ->hidden(function ($livewire) {
-                                if ($livewire instanceof CreateUser) {
-                                    return true;
-                                }
-                            }),
+                            ->hiddenOn('create'),
                         PasswordGenerator::make('password')
                             ->columnSpan('full')
-                            ->visible(function ($livewire, $get) {
-                                if ($livewire instanceof CreateUser) {
-                                    return true;
-                                }
-                                return $get('reset_password') == true;
-                            })
+                            ->visible(fn ($livewire, $get) => $livewire instanceof CreateUser || $get('reset_password') == true)
                             ->rules(config('filament-breezy.password_rules', 'max:8'))
                             ->required()
                             ->dehydrateStateUsing(function ($state) {

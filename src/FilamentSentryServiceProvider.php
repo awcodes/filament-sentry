@@ -22,6 +22,13 @@ class FilamentSentryServiceProvider extends PluginServiceProvider
             ->hasViews();
     }
 
+    protected function getResources(): array
+    {
+        return [
+            config('filament-sentry.user_resource')
+        ];
+    }
+
     public function boot()
     {
         parent::boot();
@@ -35,9 +42,5 @@ class FilamentSentryServiceProvider extends PluginServiceProvider
                 return $user->hasRole('super_admin') ? true : null;
             });
         }
-
-        Filament::registerResources([
-            config('filament-sentry.user_resource')
-        ]);
     }
 }

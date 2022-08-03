@@ -18,11 +18,17 @@ Publish config file. This will publish Sentry's version of Breezy's config with 
 php artisan vendor:publish --tag=filament-sentry-config
 ```
 
+or, if updating
+
+```bash
+php artisan vendor:publish --tag=filament-sentry-config --force
+```
+
 ## Filament Shield
 Install Shield
 
 ```bash
-php artisan shield:install --fresh --setting
+php artisan shield:install --fresh
 ```
 
 Add the `Spatie\Permission\Traits\HasRoles` or `BezhanSalleh\FilamentShield\Traits\HasFilamentShield` trait to your User model(s):
@@ -62,12 +68,17 @@ Filament Sentry unguards users with the super_admin role allowing them to bypass
 
 In `database/seeders/DatabaseSeeder.php` or where appropriate:
 
-```bash
-php artisan vendor:publish --tag=filament-shield-seeder
-```
-
 ```php
-$this->call(ShieldSettingSeeder::class);
+/** Additial roles */
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Artisan;
+
+$admin = Role::create(['name' => 'admin'])
+    ->givePermissionTo(Permission::where('name', 'not like', '%_role')->get());
+$editor = Role::create(['name' => 'editor'])
+    ->givePermissionTo(Permission::where('name', 'not like', '%_role')->where('name', 'not like', '%_user')->get());
+
 Artisan::call('shield:generate');
 
 \App\Models\User::withoutEvents(function() {
@@ -75,5 +86,12 @@ Artisan::call('shield:generate');
         'name' => 'Tony Stark',
         'email' => 'i.am@ironman.com',
     ])->assignRole('super_admin');
+});
+
+\App\Models\User::withoutEvents(function() {
+    \App\Models\User::factory()->create([
+        'name' => 'Pepper Pots',
+        'email' => 'pepper.pots@ironman.com',
+    ])->assignRole('admin');
 });
 ```
