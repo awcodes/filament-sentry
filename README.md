@@ -18,12 +18,6 @@ Publish config file. This will publish Sentry's version of Breezy's config with 
 php artisan vendor:publish --tag=filament-sentry-config
 ```
 
-or, if updating
-
-```bash
-php artisan vendor:publish --tag=filament-sentry-config --force
-```
-
 ## Filament Shield
 Install Shield
 
