@@ -7,6 +7,7 @@ use Livewire\Livewire;
 use Illuminate\View\View;
 use Filament\Facades\Filament;
 use Filament\PluginServiceProvider;
+use FilamentSentry\Commands\EjectResourcesCommand;
 use Illuminate\Support\Facades\Gate;
 use Spatie\LaravelPackageTools\Package;
 use FilamentSentry\Observers\UserObserver;
@@ -19,6 +20,9 @@ class FilamentSentryServiceProvider extends PluginServiceProvider
         $package
             ->name('filament-sentry')
             ->hasConfigFile(['filament-sentry', 'filament-breezy'])
+            ->hasCommands([
+                EjectResourcesCommand::class,
+            ])
             ->hasViews();
     }
 
