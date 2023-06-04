@@ -6,7 +6,7 @@ use FilamentSentry\Resources\UserResource\Pages\CreateUser;
 use FilamentSentry\Resources\UserResource\Pages\EditUser;
 use FilamentSentry\Resources\UserResource\Pages\ListUsers;
 use App\Models\User;
-use BezhanSalleh\FilamentShield\FilamentShield;
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use BezhanSalleh\FilamentShield\Support\Utils;
 use Closure;
 use Filament\Forms;
@@ -88,11 +88,11 @@ class UserResource extends Resource
                                 ->reactive()
                                 ->schema(static::getResourceEntitiesSchema()),
                             Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.pages'))
-                                ->visible(fn (): bool => (bool) Utils::isPageEntityEnabled() && (count(FilamentShield::getPages()) > 0 ? true : false))
+                                ->visible(fn (): bool => (bool) Utils::isPageEntityEnabled() && count(FilamentShield::getPages()) > 0)
                                 ->reactive()
                                 ->schema(static::getPageEntityPermissionsSchema()),
                             Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.widgets'))
-                                ->visible(fn (): bool => (bool) Utils::isWidgetEntityEnabled() && (count(FilamentShield::getWidgets()) > 0 ? true : false))
+                                ->visible(fn (): bool => (bool) Utils::isWidgetEntityEnabled() && count(FilamentShield::getWidgets()) > 0)
                                 ->reactive()
                                 ->schema(static::getWidgetEntityPermissionSchema()),
                             Forms\Components\Tabs\Tab::make(__('filament-shield::filament-shield.custom'))
